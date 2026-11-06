@@ -1,0 +1,22 @@
+{
+  "name": "kesare-piano-studio",
+  "version": "1.0.0",
+  "description": "KESARE Piano Studio — Professional Online Virtual Piano, Multitrack Recording Studio & Music Learning Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "serve": "npx serve ."
+  },
+  "keywords": [
+    "virtual-piano",
+    "web-audio-api",
+    "web-midi",
+    "synthesizer",
+    "music-learning",
+    "metronome",
+    "recording-studio",
+    "kesare"
+  ],
+  "author": "KESARE Piano Studio",
+  "license": "MIT"
+}

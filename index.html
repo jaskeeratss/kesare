@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#080a11">
+    <meta name="description" content="KESARE Piano Studio — Complete online virtual piano, multitrack recording studio, and interactive music learning platform.">
+    <title>KESARE Piano Studio — Professional Virtual Piano &amp; Music Platform</title>
+
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+    <!-- CSS Design System -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/piano.css">
+    <link rel="stylesheet" href="css/controls.css">
+    <link rel="stylesheet" href="css/studio.css">
+    <link rel="stylesheet" href="css/learning.css">
+    <link rel="stylesheet" href="css/tools.css">
+    <link rel="stylesheet" href="css/modals.css">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- STUDIO TOPBAR -->
+        <header class="studio-topbar">
+            <!-- Brand -->
+            <div class="studio-brand">
+                <div class="brand-icon">K</div>
+                <div class="brand-text">
+                    <h1>KESARE</h1>
+                    <span>PIANO STUDIO</span>
+                </div>
+            </div>
+
+            <!-- Main Navigation View Tabs -->
+            <nav class="nav-tabs" aria-label="Studio views">
+                <button class="nav-tab-btn active" data-nav-view="studio">Piano Studio</button>
+                <button class="nav-tab-btn" data-nav-view="recordings">Recording Studio</button>
+                <button class="nav-tab-btn" data-nav-view="learning">Learning Hub</button>
+                <button class="nav-tab-btn" data-nav-view="tools">Music Tools</button>
+            </nav>
+
+            <!-- Status Indicator Pill -->
+            <div class="status-pill pill-ready" id="midiStatusPill" title="Web MIDI Status">
+                MIDI Initializing
+            </div>
+
+            <!-- Quick Action Toolbar -->
+            <div class="top-toolbar">
+                <button class="tool-action-btn" id="muteBtn" title="Toggle Sound / Mute">
+                    <span>♫</span>
+                    <small>Audio</small>
+                </button>
+
+                <button class="tool-action-btn" id="sustainBtn" title="Toggle Sustain Pedal (or press Spacebar)">
+                    <span>♧</span>
+                    <small>Sustain</small>
+                </button>
+
+                <button class="tool-action-btn" id="quickRecordBtn" title="Quick Record Take">
+                    <span>●</span>
+                    <small>Record</small>
+                </button>
+
+                <button class="tool-action-btn" id="quickMetroBtn" title="Quick Metronome Toggle">
+                    <span>◷</span>
+                    <small>Metro</small>
+                </button>
+
+                <button class="tool-action-btn" id="openSettingsBtn" title="Studio Settings">
+                    <span>⚙</span>
+                    <small>Settings</small>
+                </button>
+
+                <button class="tool-action-btn" id="fullscreenBtn" title="Fullscreen Mode">
+                    <span>⛶</span>
+                    <small>Full</small>
+                </button>
+            </div>
+
+            <!-- Master Volume -->
+            <div class="volume-control-wrap">
+                <span class="volume-icon">🔊</span>
+                <input type="range" class="volume-slider" id="masterVolumeSlider" min="0" max="100" value="75" aria-label="Master Volume">
+                <span class="volume-value" id="volumeValueDisplay">75%</span>
+            </div>
+        </header>
+
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+
+            <!-- =============================================================
+                 VIEW 1: PIANO STUDIO (Default Live Instrument & Studio Stage)
+                 ============================================================= -->
+            <section class="view-panel is-active" id="view-studio">
+                
+                <!-- Studio Hero: Welcome Info & Real-time Visualizer -->
+                <div class="studio-hero">
+                    <div class="hero-info-card">
+                        <div>
+                            <div class="hero-eyebrow">
+                                <span class="live-indicator-dot"></span>
+                                Digital Concert Experience
+                            </div>
+                            <h2 class="hero-title">Acoustic purity.<br><span>Limitless expression.</span></h2>
+                            <p class="hero-desc">
+                                Engineered with physical string inharmonicity, multi-harmonic resonance, and responsive velocity response. Play with your computer keyboard, mouse, touch, or external USB MIDI keyboard.
+                            </p>
+                        </div>
+
+                        <div class="hero-stats-row">
+                            <div class="stat-item">
+                                <strong>61 / 88</strong>
+                                <small>Piano Keys</small>
+                            </div>
+                            <div class="stat-item">
+                                <strong>5</strong>
+                                <small>Sound Profiles</small>
+                            </div>
+                            <div class="stat-item">
+                                <strong>32</strong>
+                                <small>Polyphony</small>
+                            </div>
+                            <div class="stat-item">
+                                <strong>MIDI</strong>
+                                <small>Plug &amp; Play</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="visualizer-card">
+                        <div class="visualizer-header">
+                            <div>
+                                <span class="hud-label">SIGNAL MONITOR</span>
+                                <h4 style="font-size: 16px; font-weight: 700;">Real-Time Audio Visualizer</h4>
+                            </div>
+                            <span class="badge badge-green">LIVE BUS</span>
+                        </div>
+                        <div class="visualizer-canvas-wrap">
+                            <canvas id="audioVisualizerCanvas" class="visualizer-canvas"></canvas>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between;">
+                            <span>KESARE Web Audio 2048-FFT</span>
+                            <span>Stereo Limiter: ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instrument Selector & Playing HUD -->
+                <div style="display: grid; grid-template-columns: 280px 1fr 200px; gap: 16px; align-items: stretch;" class="studio-controls-strip">
+                    <!-- Instrument Select Card -->
+                    <div class="hud-card" style="padding: 14px 18px;">
+                        <div class="form-group" style="width: 100%;">
+                            <label class="form-label" for="instrumentSelect">Active Instrument</label>
+                            <select id="instrumentSelect" class="form-select" style="font-weight: 700;">
+                                <option value="acoustic" selected>Acoustic Grand</option>
+                                <option value="electric">Electric Piano (Rhodes)</option>
+                                <option value="organ">Drawbar Tonewheel Organ</option>
+                                <option value="synth">Poly Synthesizer (Analog)</option>
+                                <option value="soft_piano">Soft Felt Piano</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Playing Note HUD -->
+                    <div class="hud-card">
+                        <div class="hud-info">
+                            <span class="hud-label">NOW PLAYING</span>
+                            <div class="hud-note-name" id="currentNoteDisplay">Ready to Play</div>
+                            <span class="hud-details" id="noteDetailsDisplay">Strike any piano key or shortcut to begin</span>
+                        </div>
+                        <div class="hud-visual-note" id="noteIndicator">♪</div>
+                    </div>
+
+                    <!-- Octave Transpose Card -->
+                    <div class="hud-card" style="justify-content: center; gap: 12px;">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                            <span class="form-label">OCTAVE SHIFT</span>
+                            <div class="octave-controls">
+                                <button class="btn btn-sm" id="octaveDownBtn" title="Shift Octave Down (Shortcut: [ )">−</button>
+                                <span class="octave-display" id="octaveDisplay">0</span>
+                                <button class="btn btn-sm" id="octaveUpBtn" title="Shift Octave Up (Shortcut: ] )">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIRTUAL PIANO KEYBOARD SECTION -->
+                <section class="piano-section">
+                    <div class="piano-header">
+                        <div class="piano-title-wrap">
+                            <span class="hud-label">STUDIO INSTRUMENT</span>
+                            <h3>Virtual Concert Keyboard</h3>
+                        </div>
+
+                        <div class="piano-badges-row">
+                            <span class="badge badge-purple" id="keyRangeBadge">C2 — C7 (61 KEYS)</span>
+                            <span class="badge badge-green">POLYPHONIC</span>
+                        </div>
+                    </div>
+
+                    <!-- Horizontal Scrollable Keyboard Surface -->
+                    <div class="keyboard-scroll" id="keyboardScrollContainer">
+                        <div class="piano-keyboard" id="keyboardKeysContainer">
+                            <!-- Keys generated dynamically by key-renderer.js -->
+                        </div>
+                    </div>
+
+                    <!-- Keyboard Footer Guide -->
+                    <div class="piano-footer">
+                        <span>Shortcuts: Q–P, Z–M, , . / (White) &amp; 2, 3, 5, 6, 7, 9, 0, S, D, F, H, J, L, ;, ' (Black)</span>
+                        <span>[ / ] Octave Shift &bull; Spacebar Sustain Pedal &bull; Middle C = C4</span>
+                    </div>
+                </section>
+
+            </section>
+
+
+            <!-- =============================================================
+                 VIEW 2: RECORDING STUDIO (Multitrack Studio Sessions & Export)
+                 ============================================================= -->
+            <section class="view-panel" id="view-recordings">
+                <div class="recorder-hub">
+                    <!-- Recording Tape Console -->
+                    <div class="recorder-console-card">
+                        <div class="rec-meta-badges">
+                            <span class="rec-status-badge status-idle" id="recStatusBadge">IDLE</span>
+                            <span class="badge badge-purple" id="recNoteCount">0 notes</span>
+                        </div>
+
+                        <div class="rec-timer-display" id="recTimerDisplay">00:00.0</div>
+
+                        <div class="recorder-controls-row">
+                            <button class="btn btn-record-main" id="mainRecordBtn">
+                                <span>●</span> Record Take
+                            </button>
+                            <button class="btn" id="mainPauseRecBtn" disabled>Pause</button>
+                            <button class="btn btn-danger" id="mainStopRecBtn" disabled>Stop &amp; Save</button>
+                        </div>
+
+                        <p style="font-size: 13px; color: var(--text-secondary); max-width: 520px;">
+                            High-precision performance capture preserving note-on, note-off, touch velocities, and timing. Export to uncompressed 16-bit 44.1kHz WAV audio or Standard MIDI File (.mid).
+                        </p>
+                    </div>
+
+                    <!-- Recordings History Table -->
+                    <div class="recordings-history-card">
+                        <div class="recordings-history-header">
+                            <div>
+                                <span class="hud-label">BROWSER ARCHIVE</span>
+                                <h3 style="font-size: 18px; font-weight: 700;">Recorded Studio Takes</h3>
+                            </div>
+                        </div>
+
+                        <div class="recordings-list" id="recordingsListContainer">
+                            <!-- Populated dynamically by navigation.js from IndexedDB -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- =============================================================
+                 VIEW 3: LEARNING HUB (Interactive Repertoire & Practice Mode)
+                 ============================================================= -->
+            <section class="view-panel" id="view-learning">
+                <div class="learning-hub-grid">
+                    <!-- Library Sidebar -->
+                    <aside class="song-library-card">
+                        <div>
+                            <span class="hud-label">REPERTOIRE LIBRARY</span>
+                            <h3 style="font-size: 18px; font-weight: 700; margin-top: 4px;">Choose a Piece</h3>
+                        </div>
+
+                        <div class="library-filters">
+                            <input type="text" class="form-input" id="songSearchInput" placeholder="Search piece or composer...">
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <select class="form-select" id="songCategoryFilter">
+                                    <option value="all">All Genres</option>
+                                    <option value="classical">Classical</option>
+                                    <option value="traditional">Traditional</option>
+                                    <option value="exercises">Exercises</option>
+                                </select>
+
+                                <select class="form-select" id="songDiffFilter">
+                                    <option value="all">All Levels</option>
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="song-list-scroll" id="songListContainer">
+                            <!-- Populated dynamically by lesson-player.js -->
+                        </div>
+                    </aside>
+
+                    <!-- Practice Stage -->
+                    <div class="practice-stage-card">
+                        <!-- Active Song Header -->
+                        <div class="practice-header">
+                            <div class="practice-title-wrap">
+                                <h3 id="activeSongTitle">Ode to Joy</h3>
+                                <span id="activeSongComposer">Ludwig van Beethoven</span>
+                                <div style="font-size: 12px; color: var(--accent-teal); font-weight: 700; margin-top: 4px;" id="activeSongKey">C Major &bull; 4/4 &bull; 120 BPM</div>
+                            </div>
+
+                            <div class="practice-mode-selector">
+                                <button class="practice-mode-btn active" data-lesson-mode="practice" title="Wait for you to hit each note">Wait-for-Me</button>
+                                <button class="practice-mode-btn" data-lesson-mode="listen" title="Automatic playback demonstration">Listen</button>
+                                <button class="practice-mode-btn" data-lesson-mode="playalong" title="Play along at steady tempo">Play-Along</button>
+                            </div>
+                        </div>
+
+                        <!-- Tip -->
+                        <div style="font-size: 12px; color: var(--text-secondary);" id="lessonModeTip">
+                            Wait-for-me mode: Press the highlighted glowing key on the piano to advance through the piece.
+                        </div>
+
+                        <!-- Controls Bar -->
+                        <div class="practice-controls-bar">
+                            <div class="practice-ctrls-group">
+                                <button class="btn btn-primary" id="lessonPlayBtn">
+                                    <span>▶</span> Start
+                                </button>
+                                <button class="btn" id="lessonResetBtn">Reset</button>
+
+                                <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px;">
+                                    <label class="form-label" for="lessonSpeed" style="margin: 0;">Speed:</label>
+                                    <select class="form-select" id="lessonSpeed" style="padding: 4px 8px; font-size: 12px;">
+                                        <option value="0.5">50%</option>
+                                        <option value="0.75">75%</option>
+                                        <option value="1.0" selected>100%</option>
+                                        <option value="1.25">125%</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="practice-target-box" id="lessonTargetNote">
+                                Target: <strong>E4</strong> (Note 1/32)
+                            </div>
+
+                            <div id="lessonFeedback" class="lesson-feedback feedback-info">
+                                Ready to practice
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress-container">
+                            <div class="progress-bar-fill" id="lessonProgressBar"></div>
+                        </div>
+
+                        <!-- Vector SVG Sheet Music Score Display -->
+                        <div>
+                            <span class="form-label">Musical Score (Treble Staff)</span>
+                            <div class="sheet-viewer-box" id="sheetViewerContainer">
+                                <!-- Rendered dynamically by sheet-viewer.js -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- =============================================================
+                 VIEW 4: MUSIC TOOLS (Metronome, Chords, Scales, Progressions, Notepad)
+                 ============================================================= -->
+            <section class="view-panel" id="view-tools">
+                <div class="tools-hub-card">
+                    <!-- Tool Sub-Navigation -->
+                    <div class="tools-nav-bar">
+                        <button class="tool-tab-btn active" data-tool-tab="metronome">Precision Metronome</button>
+                        <button class="tool-tab-btn" data-tool-tab="chords">Chord Finder</button>
+                        <button class="tool-tab-btn" data-tool-tab="scales">Scale Explorer</button>
+                        <button class="tool-tab-btn" data-tool-tab="progressions">Harmonic Progressions</button>
+                        <button class="tool-tab-btn" data-tool-tab="notepad">Music Notepad</button>
+                    </div>
+
+                    <!-- 1. METRONOME TOOL -->
+                    <div class="tool-panel is-active" id="tool-metronome">
+                        <div class="metronome-stage">
+                            <div class="bpm-counter-wrap">
+                                <span class="bpm-label">TEMPO</span>
+                                <div class="bpm-counter" id="metroBpmDisplay">100</div>
+                                <span style="font-size: 12px; color: var(--text-muted);">BEATS PER MINUTE</span>
+                            </div>
+
+                            <!-- Beat Dots -->
+                            <div class="metro-dots-row" id="metroBeatDots">
+                                <!-- Populated dynamically -->
+                            </div>
+
+                            <!-- BPM Slider -->
+                            <div class="metro-slider-wrap">
+                                <span style="font-size: 11px; color: var(--text-muted);">30</span>
+                                <input type="range" class="metro-slider" id="metroBpmSlider" min="30" max="260" value="100">
+                                <span style="font-size: 11px; color: var(--text-muted);">260</span>
+                            </div>
+
+                            <!-- Preset Steppers -->
+                            <div class="metro-presets-row">
+                                <button class="btn btn-sm" data-bpm-step="-5">−5</button>
+                                <button class="btn btn-sm" data-bpm-step="-1">−1</button>
+                                <button class="btn btn-sm btn-primary" id="metroTapBtn">Tap Tempo</button>
+                                <button class="btn btn-sm" data-bpm-step="1">+1</button>
+                                <button class="btn btn-sm" data-bpm-step="5">+5</button>
+                            </div>
+
+                            <!-- Configuration Selectors -->
+                            <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+                                <div class="form-group">
+                                    <label class="form-label" for="metroTimeSigSelect">Time Signature</label>
+                                    <select class="form-select" id="metroTimeSigSelect">
+                                        <option value="2">2/4 March</option>
+                                        <option value="3">3/4 Waltz</option>
+                                        <option value="4" selected>4/4 Common</option>
+                                        <option value="5">5/4 Modern</option>
+                                        <option value="6">6/8 Compound</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="metroSoundSelect">Click Sound</label>
+                                    <select class="form-select" id="metroSoundSelect">
+                                        <option value="woodblock" selected>Acoustic Woodblock</option>
+                                        <option value="beep">Digital Beep</option>
+                                        <option value="classic">Mechanical Click</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-record-main" id="metroToggleBtn" style="padding: 12px 36px;">
+                                <span>▶</span> Start Metronome
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. CHORD FINDER TOOL -->
+                    <div class="tool-panel" id="tool-chords">
+                        <div class="tool-controls-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="chordRootSelect">Root Note</label>
+                                <select class="form-select" id="chordRootSelect"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="chordTypeSelect">Chord Type</label>
+                                <select class="form-select" id="chordTypeSelect"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="chordInversionSelect">Inversion</label>
+                                <select class="form-select" id="chordInversionSelect">
+                                    <option value="0">Root Position</option>
+                                    <option value="1">1st Inversion</option>
+                                    <option value="2">2nd Inversion</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="tool-result-card">
+                            <div class="tool-result-header">
+                                <div>
+                                    <span class="hud-label">CHORD RESULT</span>
+                                    <div class="tool-result-name" id="chordResultName">C Major</div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-primary btn-sm" id="playChordBtn">Play Chord</button>
+                                    <button class="btn btn-sm" id="arpeggiateChordBtn">Arpeggiate</button>
+                                </div>
+                            </div>
+                            <div class="tool-result-meta" id="chordResultFormula">Formula: 1 - 3 - 5</div>
+                            <div class="tool-result-meta" id="chordResultNotes">Notes: C4 – E4 – G4</div>
+                            <p class="tool-result-desc" id="chordResultDesc">Bright, cheerful, resolved.</p>
+                            <small style="color: var(--accent-amber); font-weight: 600;">✓ Chord notes are highlighted directly on the virtual piano in warm amber.</small>
+                        </div>
+                    </div>
+
+                    <!-- 3. SCALE FINDER TOOL -->
+                    <div class="tool-panel" id="tool-scales">
+                        <div class="tool-controls-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="scaleRootSelect">Root Key</label>
+                                <select class="form-select" id="scaleRootSelect"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="scaleTypeSelect">Scale Pattern</label>
+                                <select class="form-select" id="scaleTypeSelect"></select>
+                            </div>
+                        </div>
+
+                        <div class="tool-result-card">
+                            <div class="tool-result-header">
+                                <div>
+                                    <span class="hud-label">SCALE OVERVIEW</span>
+                                    <div class="tool-result-name" id="scaleResultName">C Major (Ionian)</div>
+                                </div>
+                                <button class="btn btn-primary btn-sm" id="playScaleBtn">Play Scale (Asc/Desc)</button>
+                            </div>
+                            <div class="tool-result-meta" id="scaleResultFormula">Pattern: W - W - H - W - W - W - H</div>
+                            <div class="tool-result-meta" id="scaleResultNotes">Degrees: C – D – E – F – G – A – B</div>
+                            <p class="tool-result-desc" id="scaleResultDesc">The fundamental foundation of Western music.</p>
+                            <small style="color: var(--accent-purple); font-weight: 600;">✓ Scale notes are highlighted in purple across all octaves, with root notes accented in green.</small>
+                        </div>
+                    </div>
+
+                    <!-- 4. CHORD PROGRESSIONS TOOL -->
+                    <div class="tool-panel" id="tool-progressions">
+                        <div class="tool-controls-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="progressionSelect">Select Progression</label>
+                                <select class="form-select" id="progressionSelect"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="progressionKeySelect">Transpose Key</label>
+                                <select class="form-select" id="progressionKeySelect"></select>
+                            </div>
+                        </div>
+
+                        <div class="tool-result-card">
+                            <div class="tool-result-header">
+                                <div>
+                                    <span class="hud-label">HARMONIC TIMELINE</span>
+                                    <p class="tool-result-desc" id="progressionDesc">The most famous progression in modern pop history</p>
+                                </div>
+                                <button class="btn btn-primary btn-sm" id="playProgressionBtn"><span>▶</span> Play Sequence</button>
+                            </div>
+
+                            <div class="progression-cards-track" id="progressionChordsList">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. MUSIC NOTEPAD TOOL -->
+                    <div class="tool-panel" id="tool-notepad">
+                        <div class="notepad-layout">
+                            <aside class="notepad-sidebar">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span class="form-label">SAVED IDEAS</span>
+                                    <button class="btn btn-sm btn-primary" id="notepadNewBtn">+ New</button>
+                                </div>
+                                <div class="notepad-list" id="notepadNotesList">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </aside>
+
+                            <div class="notepad-editor">
+                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                                    <input type="text" class="form-input notepad-title-input" id="notepadTitle" placeholder="Song Title or Musical Idea...">
+                                    <div style="display: flex; gap: 6px;">
+                                        <button class="btn btn-sm" id="notepadExportBtn" title="Export as text file">⬇ Export</button>
+                                        <button class="btn btn-sm btn-danger" id="notepadDeleteBtn" title="Delete note">✕</button>
+                                    </div>
+                                </div>
+
+                                <div class="notepad-chord-helpers">
+                                    <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">INSERT CHORD:</span>
+                                    <span class="notepad-chord-pill" data-chord="C">C</span>
+                                    <span class="notepad-chord-pill" data-chord="G">G</span>
+                                    <span class="notepad-chord-pill" data-chord="Am">Am</span>
+                                    <span class="notepad-chord-pill" data-chord="F">F</span>
+                                    <span class="notepad-chord-pill" data-chord="Dm">Dm</span>
+                                    <span class="notepad-chord-pill" data-chord="Em">Em</span>
+                                    <span class="notepad-chord-pill" data-chord="C7">C7</span>
+                                    <span class="notepad-chord-pill" data-chord="G7">G7</span>
+                                </div>
+
+                                <textarea class="notepad-textarea" id="notepadTextarea" placeholder="Write lyrics, chord progressions, melody notes, or song ideas here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+
+        <!-- SETTINGS MODAL -->
+        <div class="modal-backdrop" id="settingsModalBackdrop">
+            <div class="modal-dialog" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+                <div class="modal-header">
+                    <h3 id="settingsModalTitle">Studio Configuration &amp; Preferences</h3>
+                    <button class="icon-btn" id="closeSettingsBtn" aria-label="Close settings">✕</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="settings-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="settingKeyboardMode">Keyboard Mode</label>
+                            <select class="form-select" id="settingKeyboardMode">
+                                <option value="61" selected>61 Keys (C2 – C7)</option>
+                                <option value="88">88 Keys (A0 – C8 Full Grand)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="settingKeyLabels">Key Overlays</label>
+                            <select class="form-select" id="settingKeyLabels">
+                                <option value="both" selected>Notes &amp; Shortcuts</option>
+                                <option value="notes">Notes Only (C4, D4...)</option>
+                                <option value="shortcuts">Shortcuts Only (Q, W...)</option>
+                                <option value="solfege">Solfège (Do, Re, Mi...)</option>
+                                <option value="none">Clean (No Overlays)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="settingTuning">Master Tuning (A4)</label>
+                            <select class="form-select" id="settingTuning">
+                                <option value="440" selected>440 Hz (Standard Concert Pitch)</option>
+                                <option value="432">432 Hz (Verdi / Natural Resonance)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="settingVelocity">Touch / Velocity Response</label>
+                            <select class="form-select" id="settingVelocity">
+                                <option value="soft">Soft Touch (Gentle dynamics)</option>
+                                <option value="medium" selected>Medium (Standard Studio)</option>
+                                <option value="hard">Hard Strike (Fortissimo)</option>
+                                <option value="dynamic">Dynamic (Key Strike Position)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="settingVisMode">Visualizer Mode</label>
+                            <select class="form-select" id="settingVisMode">
+                                <option value="bars" selected>Spectrum Frequency Bars</option>
+                                <option value="wave">Oscilloscope Waveform</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="settingReverb">Acoustic Room Reverb</label>
+                            <input type="range" class="form-input" id="settingReverb" min="0" max="100" value="30">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger" id="resetSettingsBtn">Reset All to Defaults</button>
+                    <button class="btn btn-primary btn-sm" onclick="document.getElementById('settingsModalBackdrop').classList.remove('is-visible')">Done</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- FOOTER -->
+        <footer class="studio-footer">
+            <span class="footer-brand">KESARE PIANO STUDIO</span>
+            <span>Crafted with HTML5, Web Audio API &amp; Web MIDI &bull; Zero external dependencies</span>
+            <span>Made for the love of music ♡</span>
+        </footer>
+
+    </div>
+
+    <!-- Master Application Bootstrapper -->
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

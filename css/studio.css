@@ -1,0 +1,320 @@
+/**
+ * KESARE Piano Studio — Studio View & Recording Hub Styles
+ */
+
+/* Studio Hero Section */
+.studio-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+@media (max-width: 900px) {
+    .studio-hero {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hero-info-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--accent-teal);
+    text-transform: uppercase;
+}
+
+.live-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-teal);
+    box-shadow: 0 0 10px var(--accent-teal);
+    animation: livePulse 1.5s infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.hero-title {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+}
+
+.hero-title span {
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+    color: var(--text-secondary);
+    font-size: 14px;
+    max-width: 480px;
+}
+
+.hero-stats-row {
+    display: flex;
+    gap: 24px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 16px;
+    flex-wrap: wrap;
+}
+
+.stat-item strong {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.stat-item small {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+/* Visualizer Card */
+.visualizer-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 220px;
+}
+
+.visualizer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.visualizer-canvas-wrap {
+    flex: 1;
+    width: 100%;
+    height: 120px;
+    position: relative;
+    border-radius: var(--radius-md);
+    background: rgba(8, 10, 17, 0.6);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+}
+
+.visualizer-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* -------------------------------------------------------------
+ * RECORDING STUDIO VIEW
+ * -----------------------------------------------------------*/
+.recorder-hub {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.recorder-console-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.recorder-console-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+}
+
+.rec-timer-display {
+    font-size: 54px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.rec-meta-badges {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rec-status-badge {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.status-idle { background: rgba(255, 255, 255, 0.08); color: var(--text-muted); }
+.status-recording {
+    background: rgba(255, 92, 114, 0.2);
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+    animation: recBadgeBlink 1s infinite alternate;
+}
+.status-paused { background: rgba(255, 184, 77, 0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+.status-playing { background: rgba(53, 224, 193, 0.2); color: var(--accent-teal); border: 1px solid var(--accent-teal); }
+
+@keyframes recBadgeBlink {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+
+.recorder-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-record-main {
+    background: linear-gradient(135deg, #ff5c72, #d62b43);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 18px rgba(255, 92, 114, 0.4);
+    border: none;
+    transition: var(--transition-fast);
+}
+
+.btn-record-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 92, 114, 0.6);
+}
+
+.btn-record-main.recording {
+    animation: recMainPulse 1.2s infinite;
+}
+
+@keyframes recMainPulse {
+    0%, 100% { box-shadow: 0 0 16px rgba(255, 92, 114, 0.5); }
+    50% { box-shadow: 0 0 32px rgba(255, 92, 114, 0.85); }
+}
+
+/* Recordings History Section */
+.recordings-history-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.recordings-history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.recordings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recording-card {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    transition: var(--transition-fast);
+    flex-wrap: wrap;
+}
+
+.recording-card:hover {
+    border-color: var(--border-medium);
+    background: var(--bg-surface-card);
+}
+
+.rec-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rec-card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rec-title {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.rec-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.rec-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.empty-recordings-msg, .empty-list-msg {
+    text-align: center;
+    padding: 36px 20px;
+    color: var(--text-muted);
+}

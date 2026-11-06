@@ -1,0 +1,307 @@
+/**
+ * KESARE Piano Studio — Virtual Piano Keyboard Styles
+ * Realistic acoustic geometry, 3D key depression physics, and dynamic highlight states.
+ */
+
+.piano-section {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.piano-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-teal), var(--accent-purple), transparent);
+    opacity: 0.7;
+}
+
+.piano-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.piano-title-wrap h3 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+.piano-badges-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Scroll Container */
+.keyboard-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 12px 6px 18px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+    -webkit-overflow-scrolling: touch;
+}
+
+.keyboard-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.keyboard-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.keyboard-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 4px;
+}
+
+.keyboard-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-teal);
+}
+
+/* Piano Keyboard Base */
+.piano-keyboard {
+    min-width: max-content;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.piano-keys-wrapper {
+    position: relative;
+    display: flex;
+    user-select: none;
+    -webkit-user-select: none;
+    background: #090a0f;
+    padding: 8px 10px 0;
+    border-radius: 12px;
+    box-shadow: inset 0 6px 18px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.6);
+    border: 2px solid #141722;
+}
+
+/* -------------------------------------------------------------
+ * WHITE KEYS
+ * -----------------------------------------------------------*/
+.piano-key.white-key {
+    width: var(--white-key-width);
+    height: var(--white-key-height);
+    background: linear-gradient(180deg, #f7f8fc 0%, #ebeff7 85%, #d5dce8 100%);
+    border: 1px solid #b6bfcf;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 12px;
+    gap: 4px;
+    box-shadow: inset 0 1px 0 #ffffff,
+                inset 1px 0 2px rgba(255, 255, 255, 0.8),
+                inset -1px 0 2px rgba(0, 0, 0, 0.1),
+                0 4px 6px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: transform 0.06s ease, background 0.08s ease, box-shadow 0.08s ease;
+}
+
+.piano-key.white-key:hover {
+    background: linear-gradient(180deg, #ffffff 0%, #f4f6fc 85%, #dfe5f0 100%);
+}
+
+.piano-key.white-key.is-pressed {
+    transform: translateY(3px);
+    background: linear-gradient(180deg, #d8e2f0 0%, #c4d4eb 85%, #b2c4e0 100%);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25),
+                0 1px 2px rgba(0, 0, 0, 0.4),
+                0 0 16px var(--accent-teal-glow);
+}
+
+/* -------------------------------------------------------------
+ * BLACK KEYS
+ * -----------------------------------------------------------*/
+.piano-key.black-key {
+    position: absolute;
+    top: 8px;
+    width: var(--black-key-width);
+    height: var(--black-key-height);
+    background: linear-gradient(180deg, #2b3040 0%, #151822 60%, #0d0f15 100%);
+    border-radius: 0 0 4px 4px;
+    border: 1px solid #08090d;
+    border-top: none;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 10px;
+    gap: 4px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 1px 0 1px rgba(255, 255, 255, 0.1),
+                inset -1px 0 1px rgba(0, 0, 0, 0.5),
+                2px 4px 8px rgba(0, 0, 0, 0.65);
+    cursor: pointer;
+    transition: transform 0.06s ease, background 0.08s ease, box-shadow 0.08s ease;
+}
+
+.piano-key.black-key::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 2px;
+    right: 2px;
+    height: 75%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 100%);
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+.piano-key.black-key:hover {
+    background: linear-gradient(180deg, #383e52 0%, #1e2230 60%, #10121a 100%);
+}
+
+.piano-key.black-key.is-pressed {
+    transform: translateY(2px);
+    background: linear-gradient(180deg, #151822 0%, #0d0f15 80%, #050608 100%);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8),
+                0 1px 2px rgba(0, 0, 0, 0.6),
+                0 0 14px var(--accent-teal-glow);
+}
+
+/* -------------------------------------------------------------
+ * LABELS & SHORTCUT OVERLAYS
+ * -----------------------------------------------------------*/
+.key-note {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    pointer-events: none;
+}
+
+.white-key .key-note {
+    color: #4b556b;
+}
+
+.black-key .key-note {
+    color: #8c98b2;
+    font-size: 9px;
+}
+
+.key-shortcut {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.white-key .key-shortcut {
+    background: rgba(0, 0, 0, 0.06);
+    color: #717e99;
+}
+
+.black-key .key-shortcut {
+    background: rgba(255, 255, 255, 0.12);
+    color: #d1d8e8;
+    font-size: 9px;
+}
+
+/* Middle C (C4) Marker */
+.middle-c {
+    position: relative;
+}
+
+.middle-c-marker {
+    position: absolute;
+    bottom: 34px;
+    font-size: 9px;
+    font-weight: 800;
+    color: #07090e;
+    background: var(--accent-amber);
+    padding: 1px 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(255, 184, 77, 0.4);
+    pointer-events: none;
+}
+
+/* -------------------------------------------------------------
+ * HIGHLIGHT OVERLAYS (Chords, Scales, Learning)
+ * -----------------------------------------------------------*/
+/* Learning Note Guide (Cyan) */
+.piano-key.highlight-guide {
+    background: linear-gradient(180deg, #b8f7ed 0%, #68ecd5 80%, var(--accent-teal) 100%) !important;
+    box-shadow: 0 0 22px var(--accent-teal), inset 0 0 10px rgba(255, 255, 255, 0.6) !important;
+    animation: guidePulse 1.2s infinite ease-in-out;
+}
+
+.black-key.highlight-guide {
+    background: linear-gradient(180deg, #1fa38b 0%, #157362 80%, #0d4a3f 100%) !important;
+}
+
+@keyframes guidePulse {
+    0%, 100% { box-shadow: 0 0 12px var(--accent-teal-glow); }
+    50% { box-shadow: 0 0 26px var(--accent-teal); }
+}
+
+/* Chord Highlight (Amber) */
+.piano-key.highlight-chord {
+    background: linear-gradient(180deg, #ffeed4 0%, #ffd08a 80%, var(--accent-amber) 100%) !important;
+    box-shadow: 0 0 18px rgba(255, 184, 77, 0.5) !important;
+}
+
+.black-key.highlight-chord {
+    background: linear-gradient(180deg, #b37719 0%, #80530d 80%, #4d3106 100%) !important;
+}
+
+/* Scale Highlight (Purple) */
+.piano-key.highlight-scale {
+    background: linear-gradient(180deg, #ece6ff 0%, #c9baff 80%, #a491ff 100%) !important;
+    box-shadow: 0 0 14px var(--accent-purple-glow) !important;
+}
+
+.black-key.highlight-scale {
+    background: linear-gradient(180deg, #614ab8 0%, #443285 80%, #281d52 100%) !important;
+}
+
+/* Scale Root Highlight (Emerald Green) */
+.piano-key.highlight-root {
+    background: linear-gradient(180deg, #dcf8e6 0%, #87ebb0 80%, #2ecc71 100%) !important;
+    box-shadow: 0 0 18px rgba(46, 204, 113, 0.6) !important;
+}
+
+.black-key.highlight-root {
+    background: linear-gradient(180deg, #1b8547 0%, #11592f 80%, #0a361c 100%) !important;
+}
+
+/* Piano Footer Bar */
+.piano-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 12px;
+}

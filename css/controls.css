@@ -1,0 +1,280 @@
+/**
+ * KESARE Piano Studio — Studio Controls, Navigation & HUD
+ */
+
+/* Topbar */
+.studio-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: rgba(15, 20, 34, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-subtle);
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+}
+
+/* Brand */
+.studio-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+    color: #080a11;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    font-weight: 900;
+    box-shadow: 0 4px 16px var(--accent-teal-glow);
+}
+
+.brand-text h1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    color: var(--text-primary);
+}
+
+.brand-text span {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--accent-teal);
+    display: block;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    display: flex;
+    align-items: center;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 4px;
+    gap: 4px;
+}
+
+.nav-tab-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    transition: var(--transition-fast);
+}
+
+.nav-tab-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-tab-btn.active {
+    color: #07090f;
+    background: var(--accent-teal);
+    font-weight: 700;
+    box-shadow: 0 2px 10px var(--accent-teal-glow);
+}
+
+/* Quick Toolbar */
+.top-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tool-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface-elevated);
+    color: var(--text-secondary);
+    transition: var(--transition-fast);
+    gap: 2px;
+}
+
+.tool-action-btn span {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.tool-action-btn small {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.tool-action-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-surface-card);
+    border-color: var(--border-medium);
+}
+
+.tool-action-btn.active {
+    color: var(--accent-teal);
+    background: rgba(53, 224, 193, 0.12);
+    border-color: rgba(53, 224, 193, 0.4);
+    box-shadow: 0 0 12px var(--accent-teal-glow);
+}
+
+.tool-action-btn.active#quickRecordBtn {
+    color: var(--accent-red);
+    background: rgba(255, 92, 114, 0.16);
+    border-color: rgba(255, 92, 114, 0.5);
+    box-shadow: 0 0 14px rgba(255, 92, 114, 0.4);
+    animation: recordPulse 1s infinite alternate;
+}
+
+@keyframes recordPulse {
+    from { opacity: 0.8; }
+    to { opacity: 1; transform: scale(1.03); }
+}
+
+.tool-action-btn.muted {
+    color: var(--accent-red);
+    border-color: rgba(255, 92, 114, 0.3);
+}
+
+/* Master Volume */
+.volume-control-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 6px 14px;
+}
+
+.volume-icon {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border-medium);
+    outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-teal);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--accent-teal-glow);
+    transition: transform var(--transition-fast);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.volume-value {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    min-width: 32px;
+}
+
+/* -------------------------------------------------------------
+ * PLAYING HUD (Now Playing note indicator)
+ * -----------------------------------------------------------*/
+.hud-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 16px 24px;
+    box-shadow: var(--shadow-card);
+}
+
+.hud-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hud-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--accent-teal);
+    text-transform: uppercase;
+}
+
+.hud-note-name {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+}
+
+.hud-details {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.hud-visual-note {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid var(--border-medium);
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    color: var(--text-muted);
+    transition: var(--transition-fast);
+}
+
+.hud-visual-note.pulsing {
+    border-color: var(--accent-teal);
+    color: var(--accent-teal);
+    box-shadow: 0 0 20px var(--accent-teal-glow);
+    transform: scale(1.08);
+}
+
+/* Octave Shift Controls */
+.octave-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 4px 10px;
+}
+
+.octave-display {
+    font-size: 13px;
+    font-weight: 800;
+    min-width: 24px;
+    text-align: center;
+    color: var(--accent-teal);
+}

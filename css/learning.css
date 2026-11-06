@@ -1,0 +1,266 @@
+/**
+ * KESARE Piano Studio — Music Learning Hub & Sheet Viewer Styles
+ */
+
+.learning-hub-grid {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .learning-hub-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Song Library Sidebar */
+.song-library-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 840px;
+}
+
+.library-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.song-list-scroll {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 4px;
+    max-height: 580px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.song-card {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.song-card:hover {
+    background: var(--bg-surface-card);
+    border-color: var(--border-medium);
+    transform: translateY(-1px);
+}
+
+.song-card.active {
+    background: rgba(53, 224, 193, 0.08);
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 14px var(--accent-teal-glow);
+}
+
+.song-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.song-card-header h4 {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.song-card-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.song-card-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Practice Stage */
+.practice-stage-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.practice-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+}
+
+.practice-title-wrap h3 {
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.practice-title-wrap span {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.practice-mode-selector {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    padding: 4px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+}
+
+.practice-mode-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+}
+
+.practice-mode-btn:hover {
+    color: var(--text-primary);
+}
+
+.practice-mode-btn.active {
+    color: #07090f;
+    background: var(--accent-teal);
+    font-weight: 700;
+}
+
+/* Controls Bar */
+.practice-controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.practice-ctrls-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.practice-target-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+.practice-target-box strong {
+    color: var(--accent-teal);
+    font-size: 15px;
+}
+
+/* Feedback Banner */
+.lesson-feedback {
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-align: center;
+    transition: var(--transition-fast);
+    display: inline-block;
+}
+
+.lesson-feedback.pop {
+    animation: feedbackPop 0.3s ease-out;
+}
+
+@keyframes feedbackPop {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.feedback-good {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.4);
+}
+
+.feedback-warn {
+    background: rgba(255, 184, 77, 0.15);
+    color: #ffb84d;
+    border: 1px solid rgba(255, 184, 77, 0.4);
+}
+
+.feedback-info {
+    background: rgba(53, 224, 193, 0.15);
+    color: var(--accent-teal);
+    border: 1px solid rgba(53, 224, 193, 0.4);
+}
+
+/* Progress Track */
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-surface-elevated);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple));
+    border-radius: 3px;
+    transition: width 0.15s ease;
+}
+
+/* Sheet Music Viewer Area */
+.sheet-viewer-box {
+    width: 100%;
+    min-height: 190px;
+    background: #0b0e18;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.sheet-music-svg {
+    min-width: 100%;
+    height: 160px;
+    display: block;
+}
