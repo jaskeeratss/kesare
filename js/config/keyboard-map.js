@@ -85,3 +85,4 @@ export function midiToFrequency(midi, a4Freq = 440) {
 export function isWhiteKey(midi) {
     return WHITE_NOTES.includes(midi % 12);
 }
+

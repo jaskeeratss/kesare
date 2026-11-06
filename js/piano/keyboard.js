@@ -41,6 +41,14 @@ export class PianoKeyboard {
         requestAnimationFrame(() => {
             this.centerOnMiddleC();
         });
+
+        // Quick register navigation buttons
+        const bassBtn = document.getElementById("jumpBassBtn");
+        const midCBtn = document.getElementById("jumpMiddleCBtn");
+        const trebBtn = document.getElementById("jumpTrebleBtn");
+        if (bassBtn) bassBtn.addEventListener("click", () => this.scrollToBass());
+        if (midCBtn) midCBtn.addEventListener("click", () => this.centerOnMiddleC());
+        if (trebBtn) trebBtn.addEventListener("click", () => this.scrollToTreble());
     }
 
     /**
@@ -89,6 +97,22 @@ export class PianoKeyboard {
                 behavior: "smooth"
             });
         }
+    }
+
+    scrollToBass() {
+        if (!this.scrollContainer) return;
+        this.scrollContainer.scrollTo({
+            left: 0,
+            behavior: "smooth"
+        });
+    }
+
+    scrollToTreble() {
+        if (!this.scrollContainer) return;
+        this.scrollContainer.scrollTo({
+            left: this.scrollContainer.scrollWidth,
+            behavior: "smooth"
+        });
     }
 
     setOctaveShift(shift) {
@@ -280,3 +304,4 @@ export class PianoKeyboard {
         this.pressedMidis.clear();
     }
 }
+

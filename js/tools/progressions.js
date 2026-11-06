@@ -135,3 +135,4 @@ export class ProgressionPlayer {
         }, 1300);
     }
 }
+

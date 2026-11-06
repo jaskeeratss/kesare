@@ -188,3 +188,4 @@ export class MusicNotepad {
         setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
 }
+

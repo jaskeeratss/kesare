@@ -278,3 +278,347 @@
     text-align: center;
     color: var(--accent-teal);
 }
+
+/* -------------------------------------------------------------
+ * MULTI-CATEGORY INSTRUMENT BROWSER (Horizontal Reference Style)
+ * -----------------------------------------------------------*/
+.inst-browser-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 20px 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.inst-browser-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple), var(--accent-amber));
+    opacity: 0.8;
+}
+
+.inst-browser-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.inst-active-hud {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.inst-eyebrow {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--accent-teal);
+    text-transform: uppercase;
+}
+
+.inst-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.inst-active-name {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+}
+
+.inst-category-pill {
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: rgba(146, 116, 255, 0.15);
+    color: var(--accent-purple);
+    border: 1px solid rgba(146, 116, 255, 0.3);
+}
+
+.inst-status-badge {
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.status-loading {
+    background: rgba(255, 184, 77, 0.15);
+    color: var(--accent-amber);
+    border: 1px solid rgba(255, 184, 77, 0.3);
+    animation: statusBlink 1s infinite alternate;
+}
+
+.status-sampled {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.status-synth {
+    background: rgba(53, 224, 193, 0.12);
+    color: var(--accent-teal);
+    border: 1px solid rgba(53, 224, 193, 0.3);
+}
+
+.status-ready {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+}
+
+@keyframes statusBlink {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+
+.inst-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.inst-filter-tabs {
+    display: flex;
+    align-items: center;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    gap: 3px;
+}
+
+.filter-tab-btn {
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+}
+
+.filter-tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.filter-tab-btn.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* Horizontal Categories Strip */
+.inst-categories-scroll {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.inst-categories-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.inst-categories-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
+
+.inst-category-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    transition: var(--transition-fast);
+    cursor: pointer;
+}
+
+.inst-category-btn:hover {
+    background: var(--bg-surface-card);
+    color: var(--text-primary);
+    border-color: var(--border-medium);
+}
+
+.inst-category-btn.active {
+    background: var(--accent-teal);
+    color: #07090f;
+    border-color: var(--accent-teal);
+    box-shadow: 0 2px 12px var(--accent-teal-glow);
+}
+
+.cat-icon {
+    font-size: 14px;
+}
+
+/* Presets Grid */
+.inst-presets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.inst-presets-grid::-webkit-scrollbar {
+    width: 5px;
+}
+
+.inst-presets-grid::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.inst-preset-card {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    min-height: 88px;
+}
+
+.inst-preset-card:hover {
+    background: var(--bg-surface-card);
+    border-color: var(--border-medium);
+    transform: translateY(-1px);
+}
+
+.inst-preset-card.active {
+    background: rgba(53, 224, 193, 0.08);
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 14px var(--accent-teal-glow);
+}
+
+.inst-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.inst-gm-pill {
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
+
+.inst-star-btn {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1;
+    transition: var(--transition-fast);
+    padding: 2px;
+}
+
+.inst-star-btn:hover, .inst-star-btn.favorited {
+    color: var(--accent-amber);
+}
+
+.inst-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.inst-card-desc {
+    font-size: 10px;
+    color: var(--text-secondary);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.inst-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2px;
+}
+
+.inst-type-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.badge-sample {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+}
+
+.badge-synth {
+    background: rgba(53, 224, 193, 0.12);
+    color: var(--accent-teal);
+}
+
+.inst-card-preview-btn {
+    font-size: 10px;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    display: grid;
+    place-items: center;
+    transition: var(--transition-fast);
+}
+
+.inst-card-preview-btn:hover {
+    background: var(--accent-teal);
+    color: #07090f;
+}
+
+.empty-inst-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px 16px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+

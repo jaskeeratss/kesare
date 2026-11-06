@@ -17,6 +17,7 @@ import { AudioVisualizer } from "./visualizer/visualizer.js";
 import { ControlCentre } from "./ui/control-centre.js";
 import { StudioNavigation } from "./ui/navigation.js";
 import { SettingsModal } from "./ui/settings-modal.js";
+import { InstrumentBrowser } from "./ui/instrument-browser.js";
 
 class KesareApp {
     constructor() {
@@ -33,6 +34,7 @@ class KesareApp {
         this.controlCentre = null;
         this.navigation = null;
         this.settingsModal = null;
+        this.instrumentBrowser = null;
     }
 
     async init() {
@@ -74,6 +76,9 @@ class KesareApp {
         // 6. Initialize UI & Navigation
         this.controlCentre = new ControlCentre(this.keyboard);
         this.controlCentre.init();
+
+        this.instrumentBrowser = new InstrumentBrowser();
+        this.instrumentBrowser.init();
 
         this.navigation = new StudioNavigation(this.recorder);
         this.navigation.init();
@@ -219,3 +224,4 @@ document.addEventListener("DOMContentLoaded", () => {
     app.init();
     window.__KESARE__ = app; // Expose for testing and debugging
 });
+

@@ -101,3 +101,4 @@ export class MasterChain {
         return (normalized * 0.7) - 0.35;
     }
 }
+

@@ -146,7 +146,8 @@ export class StudioRecorder {
             midi,
             time,
             velocity: velocity || 0.8,
-            duration: 0
+            duration: 0,
+            instrument: audioEngine.currentInstrument
         });
         this.notify();
     }
@@ -184,7 +185,7 @@ export class StudioRecorder {
             // Note On
             const onId = setTimeout(() => {
                 if (this.state !== REC_STATES.PLAYING) return;
-                audioEngine.playNote(note.midi, note.velocity || 0.8);
+                audioEngine.playNote(note.midi, note.velocity || 0.8, note.instrument || recording.instrument);
                 this.keyboard.renderer.setKeyPressed(note.midi, true);
                 this.playbackActiveNotes.add(note.midi);
             }, note.time);
@@ -240,6 +241,7 @@ export class StudioRecorder {
         if (!recording || !recording.notes || recording.notes.length === 0) {
             throw new Error("No notes recorded");
         }
-        return exportToMidi(recording.notes, recording.title);
+        return exportToMidi(recording.notes, recording.title, 120, recording.instrument || audioEngine.currentInstrument);
     }
 }
+

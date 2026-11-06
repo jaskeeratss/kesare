@@ -3,7 +3,7 @@
  * Renders performance offline via OfflineAudioContext and encodes to 16-bit PCM RIFF WAV.
  */
 
-import { INSTRUMENTS } from "../audio/sound-profiles.js";
+import { getInstrumentPreset } from "../audio/instrument-library.js";
 import { midiToFrequency } from "../config/keyboard-map.js";
 
 /**
@@ -74,7 +74,7 @@ export async function exportToWav(notes, instrumentId = "acoustic", title = "KES
         throw new Error("No notes to export");
     }
 
-    const profile = INSTRUMENTS[instrumentId] || INSTRUMENTS.acoustic;
+    const defaultProfile = getInstrumentPreset(instrumentId);
     const sampleRate = 44100;
 
     // Calculate total duration (in seconds) + release tail
@@ -97,6 +97,7 @@ export async function exportToWav(notes, instrumentId = "acoustic", title = "KES
 
     // Schedule all notes
     notes.forEach(note => {
+        const profile = note.instrument ? getInstrumentPreset(note.instrument) : defaultProfile;
         const startTime = Math.max(0, note.time / 1000);
         const duration = Math.max(0.1, (note.duration || 400) / 1000);
         const velocity = note.velocity || 0.8;
@@ -168,3 +169,4 @@ export async function exportToWav(notes, instrumentId = "acoustic", title = "KES
 
     return true;
 }
+

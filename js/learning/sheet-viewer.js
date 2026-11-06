@@ -122,3 +122,4 @@ function midiToDiatonicOffset(midi) {
     const octaveOffset = (octave - 4) * 7;
     return pitchToStep[pitch] + octaveOffset;
 }
+

@@ -164,3 +164,4 @@ export class AudioVisualizer {
         this.ctx.fillText("KESARE Real-time Audio Engine Active", width / 2, height / 2 + 4);
     }
 }
+

@@ -302,3 +302,4 @@ export function getChordDisplayName(rootPitch, chordTypeId) {
     const chordType = CHORD_TYPES.find(c => c.id === chordTypeId) || CHORD_TYPES[0];
     return `${rootName}${chordType.symbol}`;
 }
+

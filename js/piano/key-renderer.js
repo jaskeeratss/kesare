@@ -168,3 +168,4 @@ export class KeyRenderer {
         return this.whiteKeysMap.get(midi) || this.blackKeysMap.get(midi) || null;
     }
 }
+

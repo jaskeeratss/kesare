@@ -20,17 +20,28 @@ Built with vanilla modern web technologies (**HTML5**, **CSS3**, **Vanilla ES6+ 
 * **Anti-Stuck Protection**: Safe note disposal on window blur, pointer cancel, or tab backgrounding.
 * **Key Label Modes**: Toggle between **Notes & Shortcuts**, **Notes Only**, **Shortcuts Only**, **Solfège (Do-Re-Mi)**, or **Clean Studio Aesthetic**.
 
-### 2. High-Fidelity Audio Engine (Web Audio API)
-* **5 Selectable Sound Profiles**:
-  1. **Acoustic Grand**: Multi-harmonic additive synthesis with string inharmonicity dispersion (`f_n = n * f_0 * √(1 + B*n²)`), hammer strike transient impulse, pitch-tracked lowpass filtering, and soundboard resonance.
-  2. **Electric Piano**: Vintage Rhodes/Wurlitzer tone with bell-like chime overtones and warm stereo tremolo.
-  3. **Drawbar Organ**: Hammond tonewheel emulation with authentic drawbar partial ratios (16', 5 1/3', 8', 4', 2 2/3', 2', 1 1/3'), key click transient, and constant sustain.
-  4. **Poly Synthesizer**: Dual-oscillator analog poly-synth (sawtooth + square sub) with 24dB resonant lowpass filter envelope sweep.
-  5. **Soft Felt Piano**: Intimate, felt-damped upright piano with warm lowpass cutoff and rich room ambience.
-* **Master Dynamics Limiter / Compressor**: Protects against digital clipping on dense polyphonic chords.
-* **Convolution Reverb**: Algorithmically generated acoustic room impulse response with wet/dry send control.
-* **Stereo Spatialization**: Low notes position subtly to the left, high notes position to the right, mirroring the player's perspective at an acoustic grand piano.
-* **Master Tuning Calibration**: Switch between standard A4 = 440 Hz concert pitch and 432 Hz natural resonance.
+### 2. Multi-Category Instrument Library (49 Distinct Presets across 7 Categories)
+* **Horizontal Category Selector Bar**:
+  1. **PIANO (5)**: Concert Grand Piano, Grand Piano 1, Grand Piano 2, Bright Acoustic Piano, Honky-Tonk Piano.
+  2. **ELECTRIC PIANO (5)**: Electric Grand Piano, Electric Piano 1 (Rhodes-style), Electric Piano 2 (DX-style), Electric Piano 3, Clavinet-style Electric Piano.
+  3. **KEYS (8)**: Harpsichord, Clavinet, Celesta, Music Box, Vibraphone, Marimba, Xylophone, Glockenspiel.
+  4. **ORGAN (7)**: Drawbar Organ, Percussive Organ, Rock Organ, Church Organ, Reed Organ, Pipe Organ, Hammond-style Organ.
+  5. **GUITAR (8)**: Nylon String Guitar, Steel String Guitar, Jazz Electric Guitar, Clean Electric Guitar, Muted Electric Guitar, Overdriven Guitar, Distortion Guitar, Harmonics Guitar.
+  6. **BASS (8)**: Acoustic Bass, Fingered Electric Bass, Picked Electric Bass, Fretless Bass, Slap Bass 1, Slap Bass 2, Synth Bass 1, Synth Bass 2.
+  7. **STRINGS (8)**: Violin, Viola, Cello, Contrabass, Tremolo Strings, Pizzicato Strings, Orchestral Harp, String Ensemble.
+* **Hybrid SoundFont & Physical Synthesis Architecture**:
+  * **On-Demand SoundFont Streaming**: Asynchronously loads and caches authentic General MIDI SoundFont samples in session memory.
+  * **Dedicated Physical Synthesis Models**: Every instrument preset has its own tailored physical synthesis parameters (harmonics, inharmonicity, envelopes, resonant filters, distortion wave-shapers, vibrato LFO, tremolo, and transients) ensuring 100% offline functionality.
+* **Preset Features**:
+  * Real-time preview arpeggio button (`▶ Preview`).
+  * Favorites pinning (`★` / `☆`) with persistent local storage.
+  * Recently used instrument history.
+  * Loading state indicators (Sampled / Synthesis / Decoding).
+* **Master Dynamics & Reverb**:
+  * Master dynamics compressor / limiter prevents digital clipping.
+  * Algorithmic convolution room reverb with adjustable wet/dry send.
+  * Stereo spatial panner across keyboard octaves.
+  * Master tuning calibration (A4 = 440 Hz standard vs 432 Hz Verdi resonance).
 
 ### 3. Studio Recording Hub & Real Exporters
 * **High-Precision Time Capture**: Preserves note-on, note-off, touch velocities, and timing without drift using `performance.now()`.
@@ -204,3 +215,4 @@ KESARE Piano Studio is built for 100% free static hosting:
 ## 📄 License
 
 Open-source under the **MIT License**. Created for the love of music.
+

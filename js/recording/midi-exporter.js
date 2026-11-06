@@ -3,6 +3,8 @@
  * Generates valid .mid binary files with standard tempo, division, and note events.
  */
 
+import { getInstrumentPreset } from "../audio/instrument-library.js";
+
 /**
  * Encode an integer as a MIDI Variable-Length Quantity (VLQ) byte array
  */
@@ -22,7 +24,7 @@ function toVLQ(value) {
 /**
  * Export notes array to standard MIDI file and trigger browser download
  */
-export function exportToMidi(notes, title = "KESARE_Performance", bpm = 120) {
+export function exportToMidi(notes, title = "KESARE_Performance", bpm = 120, instrumentId = "concert-grand") {
     if (!notes || notes.length === 0) {
         throw new Error("No notes to export");
     }
@@ -84,7 +86,12 @@ export function exportToMidi(notes, title = "KESARE_Performance", bpm = 120) {
     const titleBytes = Array.from(new TextEncoder().encode(title.substring(0, 32)));
     pushBytes(0x00, 0xFF, 0x03, titleBytes.length, ...titleBytes);
 
-    // 4. Output Note Events with Delta Times
+    // 4. MIDI Program Change Event (Select GM Instrument, Delta 0)
+    const preset = getInstrumentPreset(instrumentId);
+    const gmProgram = preset ? preset.gmProgram : 0;
+    pushBytes(0x00, 0xC0, gmProgram);
+
+    // 5. Output Note Events with Delta Times
     let lastTick = 0;
     rawEvents.forEach(ev => {
         const delta = Math.max(0, ev.tick - lastTick);
@@ -130,3 +137,4 @@ export function exportToMidi(notes, title = "KESARE_Performance", bpm = 120) {
 
     return true;
 }
+
