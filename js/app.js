@@ -7,7 +7,7 @@ import { audioEngine } from "./audio/audio-engine.js";
 import { PianoKeyboard } from "./piano/keyboard.js";
 import { StudioRecorder } from "./recording/recorder.js";
 import { LessonPlayer } from "./learning/lesson-player.js";
-import { StudioMetronome } from "./tools/metronome.js";
+import { StudioMetronome, getTempoName } from "./tools/metronome.js";
 import { ChordFinder } from "./tools/chord-finder.js";
 import { ScaleFinder } from "./tools/scale-finder.js";
 import { ProgressionPlayer } from "./tools/progressions.js";
@@ -105,8 +105,15 @@ class KesareApp {
     setupMetronomeUI() {
         const toggleBtn = document.getElementById("metroToggleBtn");
         const quickMetroBtn = document.getElementById("quickMetroBtn");
+        const quickMetroStrip = document.getElementById("quickMetroStrip");
+        const quickMetroMinusBtn = document.getElementById("quickMetroMinusBtn");
+        const quickMetroPlusBtn = document.getElementById("quickMetroPlusBtn");
+        const quickMetroBpmDisplay = document.getElementById("quickMetroBpmDisplay");
+        const openFullMetroBtn = document.getElementById("openFullMetroBtn");
+
         const bpmSlider = document.getElementById("metroBpmSlider");
         const bpmDisplay = document.getElementById("metroBpmDisplay");
+        const tempoNameDisplay = document.getElementById("metroTempoName");
         const tapBtn = document.getElementById("metroTapBtn");
         const timeSigSelect = document.getElementById("metroTimeSigSelect");
         const soundSelect = document.getElementById("metroSoundSelect");
@@ -121,37 +128,76 @@ class KesareApp {
 
         updateDots(this.metronome.beatsPerBar);
 
-        const handleMetroToggle = () => {
-            this.metronome.toggle();
+        const syncAllDisplays = () => {
+            const bpm = this.metronome.bpm;
+            if (bpmSlider) bpmSlider.value = bpm;
+            if (bpmDisplay) bpmDisplay.textContent = bpm;
+            if (quickMetroBpmDisplay) quickMetroBpmDisplay.textContent = `${bpm} BPM`;
+            if (tempoNameDisplay) tempoNameDisplay.textContent = `${getTempoName(bpm)} (${bpm})`;
+        };
+
+        syncAllDisplays();
+
+        const handleMetroToggle = async () => {
+            await this.metronome.toggle();
         };
 
         if (toggleBtn) toggleBtn.addEventListener("click", handleMetroToggle);
         if (quickMetroBtn) quickMetroBtn.addEventListener("click", handleMetroToggle);
 
+        if (quickMetroMinusBtn) {
+            quickMetroMinusBtn.addEventListener("click", () => {
+                this.metronome.setBpm(this.metronome.bpm - 5);
+                syncAllDisplays();
+            });
+        }
+
+        if (quickMetroPlusBtn) {
+            quickMetroPlusBtn.addEventListener("click", () => {
+                this.metronome.setBpm(this.metronome.bpm + 5);
+                syncAllDisplays();
+            });
+        }
+
+        if (openFullMetroBtn) {
+            openFullMetroBtn.addEventListener("click", () => {
+                if (this.navigation) {
+                    this.navigation.switchView("tools");
+                    this.navigation.switchTool("metronome");
+                }
+            });
+        }
+
         if (bpmSlider) {
             bpmSlider.addEventListener("input", (e) => {
                 const bpm = Number(e.target.value);
                 this.metronome.setBpm(bpm);
-                if (bpmDisplay) bpmDisplay.textContent = bpm;
+                syncAllDisplays();
             });
         }
 
-        // BPM step buttons
+        // BPM step buttons (-5, -1, +1, +5)
         document.querySelectorAll("[data-bpm-step]").forEach(btn => {
             btn.addEventListener("click", () => {
                 const step = Number(btn.dataset.bpmStep);
-                const newBpm = this.metronome.bpm + step;
-                this.metronome.setBpm(newBpm);
-                if (bpmSlider) bpmSlider.value = this.metronome.bpm;
-                if (bpmDisplay) bpmDisplay.textContent = this.metronome.bpm;
+                this.metronome.setBpm(this.metronome.bpm + step);
+                syncAllDisplays();
+            });
+        });
+
+        // Italian tempo preset buttons
+        document.querySelectorAll("[data-bpm-preset]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const targetBpm = Number(btn.dataset.bpmPreset);
+                this.metronome.setBpm(targetBpm);
+                syncAllDisplays();
             });
         });
 
         if (tapBtn) {
             tapBtn.addEventListener("click", () => {
                 this.metronome.tap();
-                if (bpmSlider) bpmSlider.value = this.metronome.bpm;
-                if (bpmDisplay) bpmDisplay.textContent = this.metronome.bpm;
+                syncAllDisplays();
             });
         }
 
@@ -169,24 +215,41 @@ class KesareApp {
             });
         }
 
-        // Metronome events
+        // Metronome beat ticks (visual animation synchronized to Web Audio clock)
         this.metronome.onBeatTick = (beatNumber, isDownbeat) => {
-            if (!dotsContainer) return;
-            const dots = dotsContainer.querySelectorAll(".metro-dot");
-            dots.forEach((dot, idx) => {
-                dot.classList.toggle("active", idx === beatNumber);
-            });
+            if (dotsContainer) {
+                const dots = dotsContainer.querySelectorAll(".metro-dot");
+                dots.forEach((dot, idx) => {
+                    dot.classList.toggle("active", idx === beatNumber);
+                });
+            }
+
+            // Pulse top toolbar button
+            if (quickMetroBtn) {
+                quickMetroBtn.classList.remove("beat-flash", "downbeat-flash");
+                void quickMetroBtn.offsetWidth;
+                quickMetroBtn.classList.add(isDownbeat ? "downbeat-flash" : "beat-flash");
+            }
         };
 
+        // State change listener
         this.metronome.onStateChange = () => {
             const isRunning = this.metronome.isRunning;
+
             if (toggleBtn) {
                 toggleBtn.classList.toggle("active", isRunning);
                 toggleBtn.innerHTML = isRunning ? `<span>⏹</span> Stop Metronome` : `<span>▶</span> Start Metronome`;
             }
+
             if (quickMetroBtn) {
                 quickMetroBtn.classList.toggle("active", isRunning);
             }
+
+            if (quickMetroStrip) {
+                quickMetroStrip.classList.toggle("is-active", isRunning);
+            }
+
+            syncAllDisplays();
         };
     }
 

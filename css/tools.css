@@ -95,6 +95,22 @@
     text-transform: uppercase;
 }
 
+.metro-tempo-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-teal);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+}
+
+.metro-tempo-presets {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 6px;
+}
+
 .metro-dots-row {
     display: flex;
     align-items: center;

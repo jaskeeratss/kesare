@@ -64,10 +64,17 @@
                     <small>Record</small>
                 </button>
 
-                <button class="tool-action-btn" id="quickMetroBtn" title="Quick Metronome Toggle">
+                <button class="tool-action-btn" id="quickMetroBtn" title="Toggle Metronome (or press to start)">
                     <span>◷</span>
                     <small>Metro</small>
                 </button>
+
+                <div class="quick-metro-strip" id="quickMetroStrip">
+                    <button class="btn btn-sm" id="quickMetroMinusBtn" title="Decrease BPM by 5">−5</button>
+                    <span class="quick-metro-bpm" id="quickMetroBpmDisplay">100 BPM</span>
+                    <button class="btn btn-sm" id="quickMetroPlusBtn" title="Increase BPM by 5">+5</button>
+                    <button class="btn btn-sm btn-primary" id="openFullMetroBtn" title="Open Full Metronome Tools">Tools ↗</button>
+                </div>
 
                 <button class="tool-action-btn" id="openSettingsBtn" title="Studio Settings">
                     <span>⚙</span>
@@ -381,7 +388,8 @@
                             <div class="bpm-counter-wrap">
                                 <span class="bpm-label">TEMPO</span>
                                 <div class="bpm-counter" id="metroBpmDisplay">100</div>
-                                <span style="font-size: 12px; color: var(--text-muted);">BEATS PER MINUTE</span>
+                                <div class="metro-tempo-name" id="metroTempoName">Andante (76–107)</div>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">BEATS PER MINUTE</span>
                             </div>
 
                             <!-- Beat Dots -->
@@ -396,13 +404,22 @@
                                 <span style="font-size: 11px; color: var(--text-muted);">260</span>
                             </div>
 
-                            <!-- Preset Steppers -->
+                            <!-- Preset Steppers & Tap Tempo -->
                             <div class="metro-presets-row">
                                 <button class="btn btn-sm" data-bpm-step="-5">−5</button>
                                 <button class="btn btn-sm" data-bpm-step="-1">−1</button>
                                 <button class="btn btn-sm btn-primary" id="metroTapBtn">Tap Tempo</button>
                                 <button class="btn btn-sm" data-bpm-step="1">+1</button>
                                 <button class="btn btn-sm" data-bpm-step="5">+5</button>
+                            </div>
+
+                            <!-- Quick Italian Tempo Presets -->
+                            <div class="metro-tempo-presets">
+                                <button class="btn btn-sm" data-bpm-preset="60">Largo (60)</button>
+                                <button class="btn btn-sm" data-bpm-preset="84">Andante (84)</button>
+                                <button class="btn btn-sm" data-bpm-preset="108">Moderato (108)</button>
+                                <button class="btn btn-sm" data-bpm-preset="128">Allegro (128)</button>
+                                <button class="btn btn-sm" data-bpm-preset="172">Presto (172)</button>
                             </div>
 
                             <!-- Configuration Selectors -->

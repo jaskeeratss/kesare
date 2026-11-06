@@ -211,3 +211,4 @@ function noteNameToMidi(name) {
 }
 
 export const soundfontLoader = new SoundfontLoader();
+

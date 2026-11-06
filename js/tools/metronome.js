@@ -1,16 +1,26 @@
 /**
  * KESARE Piano Studio — Precision Web Audio Metronome
- * Lookahead audio clock scheduling with tap tempo, time signatures, and visual pendulum dots.
+ * Lookahead audio clock scheduling, anti-drift resync, tap tempo, and multi-sound presets.
  */
 
 import { audioEngine } from "../audio/audio-engine.js";
+
+export function getTempoName(bpm) {
+    if (bpm < 60) return "Largo";
+    if (bpm < 76) return "Adagio";
+    if (bpm < 108) return "Andante";
+    if (bpm < 120) return "Moderato";
+    if (bpm < 168) return "Allegro";
+    if (bpm < 200) return "Presto";
+    return "Prestissimo";
+}
 
 export class StudioMetronome {
     constructor() {
         this.bpm = 100;
         this.beatsPerBar = 4;
-        this.beatSubdivision = 1; // Quarter notes
-        this.soundType = "woodblock"; // 'classic', 'woodblock', 'beep'
+        this.soundType = "woodblock"; // 'woodblock', 'beep', 'classic'
+        this.volume = 0.85;
 
         this.isRunning = false;
         this.currentBeat = 0;
@@ -22,7 +32,7 @@ export class StudioMetronome {
 
         // Callbacks
         this.onBeatTick = null; // (beatNumber, isDownbeat)
-        this.onStateChange = null;
+        this.onStateChange = null; // ()
     }
 
     setBpm(newBpm) {
@@ -31,7 +41,7 @@ export class StudioMetronome {
     }
 
     setTimeSignature(beats) {
-        this.beatsPerBar = Number(beats) || 4;
+        this.beatsPerBar = Math.max(1, Math.min(12, Number(beats) || 4));
         this.currentBeat = 0;
         if (this.onStateChange) this.onStateChange();
     }
@@ -40,22 +50,24 @@ export class StudioMetronome {
         this.soundType = type;
     }
 
+    setVolume(val) {
+        this.volume = Math.max(0, Math.min(1, val));
+    }
+
     tap() {
         const now = performance.now();
         this.tapTimes.push(now);
 
-        // Keep last 4 taps
+        // Keep last 5 taps
         if (this.tapTimes.length > 5) {
             this.tapTimes.shift();
         }
 
-        // Calculate average intervals
         if (this.tapTimes.length >= 2) {
             const intervals = [];
             for (let i = 1; i < this.tapTimes.length; i++) {
                 const diff = this.tapTimes[i] - this.tapTimes[i - 1];
-                // Ignore taps longer than 2.5 seconds
-                if (diff < 2500) {
+                if (diff < 2500 && diff > 150) {
                     intervals.push(diff);
                 }
             }
@@ -68,11 +80,21 @@ export class StudioMetronome {
         }
     }
 
-    start() {
+    async start() {
         if (this.isRunning) return;
+
         const ctx = audioEngine.initContext();
+        if (ctx.state === "suspended") {
+            try {
+                await ctx.resume();
+            } catch (err) {
+                console.warn("AudioContext resume error in metronome:", err);
+            }
+        }
+
         this.isRunning = true;
         this.currentBeat = 0;
+        // Schedule first beat slightly in the future
         this.nextBeatTime = ctx.currentTime + 0.05;
 
         this.scheduler();
@@ -96,8 +118,16 @@ export class StudioMetronome {
 
     scheduler() {
         if (!this.isRunning) return;
+
         const ctx = audioEngine.ctx;
-        const scheduleAheadTime = 0.1; // Schedule 100ms ahead
+        if (!ctx) return;
+
+        // Anti-drift resync: If nextBeatTime lagged behind currentTime (e.g. background tab or CPU spike)
+        if (this.nextBeatTime < ctx.currentTime) {
+            this.nextBeatTime = ctx.currentTime + 0.02;
+        }
+
+        const scheduleAheadTime = 0.12; // Schedule 120ms ahead
 
         while (this.nextBeatTime < ctx.currentTime + scheduleAheadTime) {
             this.scheduleBeat(this.currentBeat, this.nextBeatTime);
@@ -115,47 +145,91 @@ export class StudioMetronome {
 
     scheduleBeat(beatNumber, time) {
         const ctx = audioEngine.ctx;
+        if (!ctx) return;
+
         const isDownbeat = beatNumber === 0;
+        // Ensure playTime is strictly >= current time to prevent AudioParam negative ramp errors
+        const playTime = Math.max(ctx.currentTime + 0.002, time);
 
         // Visual notification synchronized to Web Audio clock
-        const timeUntilBeat = Math.max(0, (time - ctx.currentTime) * 1000);
+        const timeUntilBeat = Math.max(0, (playTime - ctx.currentTime) * 1000);
         setTimeout(() => {
             if (this.isRunning && this.onBeatTick) {
                 this.onBeatTick(beatNumber, isDownbeat);
             }
         }, timeUntilBeat);
 
-        // Synthesize precision click / woodblock / beep
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+        try {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
 
-        if (this.soundType === "woodblock") {
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(isDownbeat ? 1400 : 980, time);
-            osc.frequency.exponentialRampToValueAtTime(isDownbeat ? 800 : 550, time + 0.025);
+            const peakVol = (isDownbeat ? 0.95 : 0.75) * this.volume;
 
-            gain.gain.setValueAtTime(0.5, time);
-            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.035);
-            osc.stop(time + 0.04);
-        } else if (this.soundType === "beep") {
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(isDownbeat ? 1760 : 880, time);
-            gain.gain.setValueAtTime(0.35, time);
-            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.07);
-            osc.stop(time + 0.075);
-        } else {
-            // Classic mechanical click
-            osc.type = "triangle";
-            osc.frequency.setValueAtTime(isDownbeat ? 1200 : 800, time);
-            gain.gain.setValueAtTime(0.4, time);
-            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.02);
-            osc.stop(time + 0.025);
+            if (this.soundType === "woodblock") {
+                // Resonant acoustic woodblock with pitch drop
+                osc.type = "sine";
+                const startFreq = isDownbeat ? 1800 : 1250;
+                const endFreq = isDownbeat ? 950 : 650;
+                const dur = isDownbeat ? 0.065 : 0.045;
+
+                osc.frequency.setValueAtTime(startFreq, playTime);
+                osc.frequency.exponentialRampToValueAtTime(endFreq, playTime + dur);
+
+                gain.gain.setValueAtTime(0.0001, playTime);
+                gain.gain.linearRampToValueAtTime(peakVol, playTime + 0.002);
+                gain.gain.exponentialRampToValueAtTime(0.0001, playTime + dur);
+
+                osc.connect(gain);
+                gain.connect(audioEngine.masterChain.inputGain);
+
+                osc.start(playTime);
+                osc.stop(playTime + dur + 0.01);
+            } else if (this.soundType === "beep") {
+                // High digital quartz beep
+                osc.type = "sine";
+                const freq = isDownbeat ? 1760 : 880; // A6 or A5
+                const dur = isDownbeat ? 0.08 : 0.05;
+
+                osc.frequency.setValueAtTime(freq, playTime);
+
+                gain.gain.setValueAtTime(0.0001, playTime);
+                gain.gain.linearRampToValueAtTime(peakVol * 0.8, playTime + 0.003);
+                gain.gain.exponentialRampToValueAtTime(0.0001, playTime + dur);
+
+                osc.connect(gain);
+                gain.connect(audioEngine.masterChain.inputGain);
+
+                osc.start(playTime);
+                osc.stop(playTime + dur + 0.01);
+            } else {
+                // Classic mechanical metronome click (high-transient triangle)
+                osc.type = "triangle";
+                const freq = isDownbeat ? 2400 : 1500;
+                const dur = isDownbeat ? 0.045 : 0.03;
+
+                osc.frequency.setValueAtTime(freq, playTime);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.4, playTime + dur);
+
+                gain.gain.setValueAtTime(0.0001, playTime);
+                gain.gain.linearRampToValueAtTime(peakVol, playTime + 0.001);
+                gain.gain.exponentialRampToValueAtTime(0.0001, playTime + dur);
+
+                osc.connect(gain);
+                gain.connect(audioEngine.masterChain.inputGain);
+
+                osc.start(playTime);
+                osc.stop(playTime + dur + 0.01);
+            }
+
+            // Cleanup nodes after playing
+            osc.onended = () => {
+                try {
+                    osc.disconnect();
+                    gain.disconnect();
+                } catch {}
+            };
+        } catch (err) {
+            console.warn("Metronome beat scheduling error:", err);
         }
-
-        osc.connect(gain);
-        gain.connect(audioEngine.masterChain.inputGain);
-
-        osc.start(time);
     }
 }
-

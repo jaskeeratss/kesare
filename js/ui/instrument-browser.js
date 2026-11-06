@@ -24,8 +24,8 @@ export class InstrumentBrowser {
         this.container = document.getElementById("instrumentBrowserContainer");
         if (!this.container) return;
 
-        this.setupSoundfontStatusListener();
         this.render();
+        this.setupSoundfontStatusListener();
 
         // Listen for external instrument changes
         audioEngine.addInstrumentChangeListener((preset) => {
@@ -77,8 +77,8 @@ export class InstrumentBrowser {
     }
 
     setupSoundfontStatusListener() {
-        const loadingIndicator = document.getElementById("instrumentLoadingBadge");
         soundfontLoader.addStatusListener((instrumentId, status, details) => {
+            const loadingIndicator = document.getElementById("instrumentLoadingBadge");
             if (!loadingIndicator) return;
             if (status === "loading") {
                 loadingIndicator.style.display = "inline-flex";
@@ -309,3 +309,4 @@ export class InstrumentBrowser {
         cards.forEach(c => c.classList.toggle("active", c.dataset.instId === preset.id));
     }
 }
+

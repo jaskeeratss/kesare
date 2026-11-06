@@ -1228,3 +1228,4 @@ export function getInstrumentPreset(id) {
 export function getInstrumentsByCategory(categoryId) {
     return INSTRUMENT_PRESETS.filter(p => p.category === categoryId);
 }
+

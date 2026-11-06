@@ -152,6 +152,43 @@
     border-color: rgba(255, 92, 114, 0.3);
 }
 
+/* Quick Metronome Topbar Strip */
+.quick-metro-strip {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 3px 8px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.quick-metro-strip.is-active {
+    display: flex;
+}
+
+.quick-metro-bpm {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--accent-teal);
+    min-width: 58px;
+    text-align: center;
+}
+
+.tool-action-btn.beat-flash {
+    box-shadow: 0 0 16px var(--accent-teal-glow);
+    border-color: var(--accent-teal);
+    transform: scale(1.04);
+}
+
+.tool-action-btn.downbeat-flash {
+    box-shadow: 0 0 20px var(--accent-purple-glow);
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+    transform: scale(1.08);
+}
+
 /* Master Volume */
 .volume-control-wrap {
     display: flex;
